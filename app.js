@@ -5,6 +5,8 @@ const singer = document.querySelector("#music-details .singer");
 const prev = document.querySelector("#controls #prev");
 const paly = document.querySelector("#controls #paly");
 const next = document.querySelector("#controls #next");
+const duration = document.querySelector("#duration");
+const currentTime = document.querySelector("#current-time");
 
 const player = new musicPlayer(musicList);
 
@@ -63,4 +65,18 @@ function playMusic() {
     play.classList = "fa-solid fa-pause";
     audio.play();
 }
+
+const calculateTime = (totalseconds) => {
+    const minute = Math.floor(totalseconds / 60);
+    const seconds = Math.floor(totalseconds & 60);
+    const updatedseconds = seconds < 10 ? `0${seconds}` : `${seconds}`; 
+    const output = `${minute}:${updatedseconds}`;
+    return output;
+} 
+
+
+audio.addEventListener("loadedmetadata",() => {
+    // console.log(audio.duration) 
+    duration.textContent = calculateTime(audio.duration);
+})
 
