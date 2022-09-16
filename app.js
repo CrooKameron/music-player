@@ -33,13 +33,9 @@ play.addEventListener("click", () => {
     isMusicPlay ? pauseMusic() : playMusic();
 });
 
-prev.addEventListener("click", () => {
-    prevMusic();
-});
+prev.addEventListener("click", () => { prevMusic(); });
 
-next.addEventListener("click", () => {
-    nextMusic();
-});
+next.addEventListener("click", () => { nextMusic(); });
 
 function prevMusic() {
     player.prev();
@@ -69,19 +65,23 @@ function playMusic() {
 
 const calculateTime = (totalseconds) => {
     const minute = Math.floor(totalseconds / 60);
-    const seconds = Math.floor(totalseconds & 60);
+    const seconds = Math.floor(totalseconds % 60);
     const updatedseconds = seconds < 10 ? `0${seconds}` : `${seconds}`; 
     const output = `${minute}:${updatedseconds}`;
     return output;
 };
 
-
-audio.addEventListener("loadedmetadata",() => {
-    // console.log(audio.duration) 
+audio.addEventListener("loadedmetadata", () => {
     duration.textContent = calculateTime(audio.duration);
     progressBar.max = Math.floor(audio.duration);
 });
 
-audio.addEventListener("timeupdate",() => {
+audio.addEventListener("timeupdate", () => {
     progressBar.value = Math.floor(audio.currentTime);
+    currentTime.textContent = calculateTime(progressBar.value);
+});
+
+progressBar.addEventListener("input", () => {
+    currentTime.textContent = calculateTime(progressBar.value);
+    audio.currentTime = progressBar.value;
 });
