@@ -8,6 +8,8 @@ const next = document.querySelector("#controls #next");
 const duration = document.querySelector("#duration");
 const currentTime = document.querySelector("#current-time");
 const progressBar = document.querySelector("#progress-bar");
+const volume = document.querySelector("#volume");
+const volumeBar = document.querySelector("#volume-bar");
 
 const player = new musicPlayer(musicList);
 
@@ -37,29 +39,29 @@ prev.addEventListener("click", () => { prevMusic(); });
 
 next.addEventListener("click", () => { nextMusic(); });
 
-function prevMusic() {
+const prevMusic = () => {
     player.prev();
     let music = player.getMusic();
     displayMusic(music);
     playMusic();
 };
 
-function nextMusic() {
+const nextMusic = () => {
     player.next();
     let music = player.getMusic();
     displayMusic(music);
     playMusic();
 };
 
-function pauseMusic() {
+const pauseMusic = () => {
     container.classList.remove("playing");
-    play.classList = "fa-solid fa-play";
-    audio.pause();
+    play.querySelector("i").classList = "fa-solid fa-play";
+    audio.pause(); 
 };
 
-function playMusic() {
+const playMusic = () => {
     container.classList.add("playing");
-    play.classList = "fa-solid fa-pause";
+    play.querySelector("i").classList = "fa-solid fa-pause";
     audio.play();
 };
 
@@ -84,4 +86,35 @@ audio.addEventListener("timeupdate", () => {
 progressBar.addEventListener("input", () => {
     currentTime.textContent = calculateTime(progressBar.value);
     audio.currentTime = progressBar.value;
+});
+
+let soundState = "voice";
+
+volume.addEventListener("click", () => {
+    // let currentSoundLevel = volumeBar.value;
+    if (soundState==="voice") {
+        audio.muted = true;
+        soundState = "muted";
+        volume.classList = "fa-solid fa-volume-xmark";
+    } else {
+        audio.muted = false;
+        soundState = "voice";
+        volume.classList = "fa-solid fa-volume-high";
+    }
+});
+
+
+volumeBar.addEventListener("input", (e) => {
+    const value = e.target.value;
+    audio.value = value / 100;
+    if (value == 0) {
+        audio.muted = true;
+        soundState = "muted";
+        volume.classList = "fa-solid fa-volume-xmark";
+        volumeBar.value = 0;
+    } else {
+        audio.muted = false;
+        soundState = "voice";
+        volume.classList = "fa-solid fa-volume-high";
+    }
 });
