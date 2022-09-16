@@ -109,7 +109,7 @@ volume.addEventListener("click", () => {
 
 volumeBar.addEventListener("input", (e) => {
     const value = e.target.value;
-    audio.value = value / 100;
+    audio.volume = value / 100;
     if (value == 0) {
         audio.muted = true;
         soundState = "muted";
