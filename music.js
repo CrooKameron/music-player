@@ -12,7 +12,7 @@ class Music {
 }
 
 const musicList = [
-    new Music("smoke","idk","1.jpeg","1.mp3"),
-    new Music("bu da mi gecer sevgilim","yalin","2.jpeg","2.mp3"),
-    new Music("aramizda ucrumlar","suat sana","3.jpeg","3.mp3")
+    new Music("Blinding lights","The Weekend","1.jpeg","1.mp3"),
+    new Music("bu da mi gecer sevgilim","Doja Cat","2.jpeg","2.mp3"),
+    new Music("Little Dark Age","MGMT","3.jpeg","3.mp3")
 ]

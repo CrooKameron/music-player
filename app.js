@@ -10,6 +10,7 @@ const currentTime = document.querySelector("#current-time");
 const progressBar = document.querySelector("#progress-bar");
 const volume = document.querySelector("#volume");
 const volumeBar = document.querySelector("#volume-bar");
+const ul = document.querySelector("ul");
 
 const player = new musicPlayer(musicList);
 
@@ -20,6 +21,7 @@ const player = new musicPlayer(musicList);
 window.addEventListener("load", () => {
     let music = player.getMusic();
     displayMusic(music);
+    displayMusicList(player.musicList);
 });
  
 
@@ -33,11 +35,12 @@ function displayMusic(music){
 play.addEventListener("click", () => {
     const isMusicPlay = container.classList.contains("playing");
     isMusicPlay ? pauseMusic() : playMusic();
+    isPlayingNow();
 });
 
-prev.addEventListener("click", () => { prevMusic(); });
+prev.addEventListener("click", () => { prevMusic(); isPlayingNow(); });
 
-next.addEventListener("click", () => { nextMusic(); });
+next.addEventListener("click", () => { nextMusic(); isPlayingNow();});
 
 const prevMusic = () => {
     player.prev();
@@ -116,5 +119,53 @@ volumeBar.addEventListener("input", (e) => {
         audio.muted = false;
         soundState = "voice";
         volume.classList = "fa-solid fa-volume-high";
-    }
+    };
+});
+
+
+const displayMusicList = (list) => {
+    for (let i = 0; i < list.length; i++) {
+        let liTag = 
+        `<li li-index='${i}' onclick="selectedMusic(this)" class="list-group-item d-flex justify-content-between align-items-center">
+            <span>${list[i].getName()}</span>
+            <span id="music-${i}" class="badge bg-primary rounded-pill">3:40</span>
+            <audio class="music-${i}" src="mp3/${list[i].file}"></audio>
+        </li>`;
+
+        ul.insertAdjacentHTML("beforeend",liTag); 
+
+        let liAudioDuration = ul.querySelector(`#music-${i}`);
+        let liAudioTag = ul.querySelector(`.music-${i}`);
+        
+
+        liAudioTag.addEventListener("loadeddata",()=>{
+            liAudioDuration.innerText = calculateTime(liAudioTag.duration);
+        })
+
+    };
+
+};
+
+const selectedMusic = (li) => {
+    player.index = li.getAttribute("li-index");
+    displayMusic(player.getMusic());
+    playMusic();
+    isPlayingNow();
+}
+
+const isPlayingNow = () => {
+    for(let li of ul.querySelectorAll("li")){
+        if(li.classList.contains("playing")) {
+            li.classList.remove("playing");
+        };
+        if (li.getAttribute("li-index") == player.index){
+            li.classList.add("playing");
+        };
+    };
+};
+
+
+audio.addEventListener("ended", () =>{
+    nextMusic();
+    isPlayingNow();
 });
