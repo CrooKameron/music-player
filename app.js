@@ -7,6 +7,7 @@ const paly = document.querySelector("#controls #paly");
 const next = document.querySelector("#controls #next");
 const duration = document.querySelector("#duration");
 const currentTime = document.querySelector("#current-time");
+const progressBar = document.querySelector("#progress-bar");
 
 const player = new musicPlayer(musicList);
 
@@ -17,7 +18,7 @@ const player = new musicPlayer(musicList);
 window.addEventListener("load", () => {
     let music = player.getMusic();
     displayMusic(music);
-})
+});
  
 
 function displayMusic(music){
@@ -25,7 +26,7 @@ function displayMusic(music){
     singer.innerText = music.singer;
     image.src = "img/" + music.img;
     audio.src = "mp3/" + music.file;
-}
+};
 
 play.addEventListener("click", () => {
     const isMusicPlay = container.classList.contains("playing");
@@ -45,26 +46,26 @@ function prevMusic() {
     let music = player.getMusic();
     displayMusic(music);
     playMusic();
-}
+};
 
 function nextMusic() {
     player.next();
     let music = player.getMusic();
     displayMusic(music);
     playMusic();
-}
+};
 
 function pauseMusic() {
     container.classList.remove("playing");
     play.classList = "fa-solid fa-play";
     audio.pause();
-}
+};
 
 function playMusic() {
     container.classList.add("playing");
     play.classList = "fa-solid fa-pause";
     audio.play();
-}
+};
 
 const calculateTime = (totalseconds) => {
     const minute = Math.floor(totalseconds / 60);
@@ -72,11 +73,15 @@ const calculateTime = (totalseconds) => {
     const updatedseconds = seconds < 10 ? `0${seconds}` : `${seconds}`; 
     const output = `${minute}:${updatedseconds}`;
     return output;
-} 
+};
 
 
 audio.addEventListener("loadedmetadata",() => {
     // console.log(audio.duration) 
     duration.textContent = calculateTime(audio.duration);
-})
+    progressBar.max = Math.floor(audio.duration);
+});
 
+audio.addEventListener("timeupdate",() => {
+    progressBar.value = Math.floor(audio.currentTime);
+});
